@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: ariston-server
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn ariston_server:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
+    healthCheckPath: /health
+    envVars:
+      # sync: false = o valor NAO vem deste ficheiro; o Render pergunta-o ao criar.
+      - key: ARISTON_USERNAME
+        sync: false
+      - key: ARISTON_PASSWORD
+        sync: false
+      # O Render gera sozinho uma chave aleatoria.
+      - key: API_KEY
+        generateValue: true
